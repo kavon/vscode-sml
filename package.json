@@ -104,7 +104,9 @@
     "vscode": "1.0.3"
   },
   "dependencies": {
-    "lodash": "4.17.3"
+    "lodash": "4.17.3",
+    "vscode": "^1.1.5",
+    "vscode-languageclient": "^3.3.0"
   },
   "extensionDependencies": []
 }

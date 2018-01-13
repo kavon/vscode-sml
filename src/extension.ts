@@ -1,3 +1,61 @@
+
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ * ------------------------------------------------------------------------------------------ */
+'use strict';
+
+import * as path from 'path';
+
+import { workspace, ExtensionContext } from 'vscode';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
+
+export function activate(context: ExtensionContext) {
+
+	// The server is implemented in node
+	let serverModule = context.asAbsolutePath(path.join('server', 'server.js'));
+	// The debug options for the server
+	let debugOptions = { execArgv: ["--nolazy", "--debug=6009"] };
+
+	// If the extension is launched in debug mode then the debug server options are used
+	// Otherwise the run options are used
+	let serverOptions: ServerOptions = {
+		run : { module: serverModule, transport: TransportKind.ipc },
+		debug: { module: serverModule, transport: TransportKind.ipc, options: debugOptions }
+	}
+
+	// Options to control the language client
+	let clientOptions: LanguageClientOptions = {
+		// Register the server for plain text documents
+		documentSelector: [{scheme: 'file', language: 'plaintext'}],
+		synchronize: {
+			// Synchronize the setting section 'lspSample' to the server
+			configurationSection: 'lspSample',
+			// Notify the server about file changes to '.clientrc files contain in the workspace
+			fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
+		}
+	}
+
+	// Create the language client and start the client.
+	let disposable = new LanguageClient('lspSample', 'Language Server Example', serverOptions, clientOptions).start();
+
+	// Push the disposable to the context's subscriptions so that the
+	// client can be deactivated on extension deactivation
+	context.subscriptions.push(disposable);
+}
+
+
+/* 
+   ////////////////////////////////////////////////////////////////////////////
+   
+   Because I'm not familiar enough with TypeScript & VSCode extensions,
+   I am starting off with the example code [1] to test out my language server.
+   We will need to merge the above code with the below later on. ~kavon
+   
+   [1] https://code.visualstudio.com/docs/extensions/example-language-server
+   
+   ////////////////////////////////////////////////////////////////////////////
+
 import * as childProcess from "child_process";
 import * as events from "events";
 import * as fs from "fs";
@@ -121,7 +179,7 @@ class SML implements vs.Disposable {
         await document.save();
       }, wait, { trailing: true });
     } else {
-      (this as any).make = lodash.debounce(async () => {/* */});
+      (this as any).make = lodash.debounce(async () => {  });
     }
   }
 
@@ -267,3 +325,5 @@ export async function activate(context: vs.ExtensionContext) {
 export function deactivate() {
   return;
 }
+
+*/
