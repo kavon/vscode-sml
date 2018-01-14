@@ -57,6 +57,11 @@
           "type": "boolean",
           "default": false,
           "description": "Don't prompt about missing sml.json for CM.make."
+        },
+        "sml.server.path": {
+          "type": "string",
+          "default": "/Users/kavon/side/sml-language-server/bin/sml-language-server",
+          "description": "Path to the SML Language Server executable."
         }
       }
     },
